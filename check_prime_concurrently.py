@@ -44,7 +44,6 @@ def take_time(func, args, print_res=True):
 	print func.__name__ + " took", time() - stamp
 
 
-
 def job_creator(n):
 	check_range = range(2, int(ceil(sqrt(n)))+1)
 	chunk_size = len(check_range)/500
