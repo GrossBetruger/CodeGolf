@@ -1,7 +1,8 @@
-from collections import deque 
+from collections import deque, defaultdict
 import re 
 
-arithmatic_exp = "* + 12 1 * 4 2"
+polish_notation = "* + 12 1 * 4 2"
+reverse_polish = "3 2 3 4 * + *"
 
 
 def lexer(exp):
@@ -24,6 +25,7 @@ def read_exp(exp):
 		if evaluated:
 			interpreter_stack.append(evaluated)
 	return interpreter_stack
+
 
 
 def interprete(interpreter_stack):
@@ -49,5 +51,39 @@ def binary_operation(operation, operand_a, operand_b):
 		return int(operand_a) * int(operand_b)
 
 
+def eval_tree(tree):
+	operation = get_root(tree)
+	first_operand = tree[get_root(tree)][0]
 
-print interprete(read_exp(arithmatic_exp))
+	if type(first_operand)==dict:
+		second_operand = tree[get_root(tree)][1]
+		return binary_operation(operation, eval_tree(first_operand), second_operand)
+	else:
+		first_operand = tree[get_root(tree)][0]
+		second_operand = tree[get_root(tree)][1]
+		return binary_operation(operation, first_operand, second_operand)
+
+
+def get_root(tree):
+	try:
+		return tree.keys()[0]
+	except AttributeError:
+		pass
+
+
+def read_rev(exp):
+	root = exp[-1]
+	right = exp[-2]
+	left = exp[0]
+	if is_operation(right):
+		return {root: [read_rev(exp[1:-1]), left]}
+	else:
+		return {root: [right, left]}
+
+
+if __name__=="__main__":
+	lexed = list(read_exp(reverse_polish))
+	print "polish notation result:", interprete(read_exp(polish_notation))
+	tt = read_rev(lexed)
+	print "reverse polish tree structure", tt
+	print "reverse polish result:", eval_tree(tt)
