@@ -27,7 +27,6 @@ def read_exp(exp):
 	return interpreter_stack
 
 
-
 def interprete(interpreter_stack):
 	operands_stack = deque()
 	while interpreter_stack:
