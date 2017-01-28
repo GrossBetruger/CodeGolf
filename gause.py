@@ -27,14 +27,13 @@ def flatten(l):
 
 if __name__=="__main__":
 	trickled_balls = trickle_down(1000, 11)
-	dist = [[i]*x for i, x in enumerate(trickled_balls)]
+	dist = flatten([[i]*x for i, x in enumerate(trickled_balls)])
 	print trickled_balls
-	dist = flatten(dist)
 	print dist
-	fit = stats.norm.pdf(dist, np.mean(dist), np.std(dist))  #this is a fitting indeed
+	fit = stats.norm.pdf(dist, np.mean(dist), np.std(dist)) 
 
 	pl.plot(dist, fit, '-o')
 
-	pl.hist(dist, normed=True)      #use this to draw histogram of your data
+	pl.hist(dist, normed=True) 
 
 	pl.show() 
