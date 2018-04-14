@@ -1,67 +1,35 @@
-from random import randint
-import copy
 from random import choice
-
-CHARACTERS = ["elf", "dork", "fork", "superwoman", "rick", "42"]
-
-DEPTH = 0
-
-CHOSEN_A = set()
-CHOSEN_B = set()
+import operator as op
 
 
-def randomize_character_pointer(character_list, restriction=None):
-    if len(character_list) == 1:
-        return 0
-    possible_pointers = range(0, len(character_list)-1)
-    if restriction:
-        possible_pointers.remove(restriction)
-    return choice(possible_pointers)
+CHARACTERS = ["elf", "dork", "fork", "superwoman", "rick", "42", "more", "that"]
+HUNDRED_CHARACTERS = [str(x) for x in range(10**2)]
 
 
-def choose_characters(character_a_list, character_b_list):
-    if not character_a_list or not character_b_list:
-        return
-
-    if len(character_a_list) == len(character_b_list) == 1:
-        return
-
-    full_a = copy.copy(character_a_list)
-    full_b = copy.copy(character_b_list)
-
-    character_a = choice(character_a_list) if len(character_a_list) > 1 else character_a_list[0]
-    character_b = choice(character_b_list) if len(character_b_list) > 1 else character_b_list[0]
-    if character_a == character_b:
-        return choose_characters(full_a, full_b)
-
-    character_a_list.remove(character_a)
-    character_b_list.remove(character_b)
-    # if not (character_a in CHOSEN_A and character_b in CHOSEN_B):
-    print character_a, character_b
-
-    return choose_characters(full_a, character_b_list), choose_characters(character_a_list, full_b)
+def full_random(characters):
+    matches = []
+    size = ncr(len(characters), 2)
+    print "combinatorial size is:", size
+    while size:
+        a = choice(characters)
+        b = choice(characters)
+        if a == b:
+            continue
+        a, b = list(sorted([a, b]))
+        if not ((a, b) in matches) and a != b:
+            print a, b
+            matches.append((a, b))
+            size -= 1
 
 
-def get_characters(characters):
-    counter = int()
-    characters_a = characters
-    characters_b = copy.copy(characters)
-    while characters_a:
-        chosen_a = choice(characters_a)
-        while characters_b:
-            chosen_b = choice(characters_b)
-            if chosen_a != chosen_b:
-                print chosen_a, chosen_b
-            characters_b = filter(lambda x: x != chosen_b, characters_b)
-            counter += 1
-        characters_a = filter(lambda x: x != chosen_a, copy.copy(characters_a))
-        characters_b = copy.copy(characters_a)
-    print
-    print "# of steps {}".format(counter)
+def ncr(n, r):
+    r = min(r, n-r)
+    numer = reduce(op.mul, xrange(n, n-r, -1), 1)
+    denom = reduce(op.mul, xrange(1, r+1), 1)
+    return numer//denom
 
 
 if __name__ == "__main__":
-    # print len(set(CHARACTERS))
-    get_characters(CHARACTERS)
-    quit()
-    choose_characters(CHARACTERS, copy.copy(CHARACTERS))
+    full_random(CHARACTERS)
+    print
+    print "number of characters:", len(CHARACTERS)
