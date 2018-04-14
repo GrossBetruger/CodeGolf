@@ -3,11 +3,11 @@ import operator as op
 
 
 CHARACTERS = ["elf", "dork", "fork", "superwoman", "rick", "42", "more", "that"]
-HUNDRED_CHARACTERS = [str(x) for x in range(10**2)]
+THOUSAND_CHARACTERS = [str(x) for x in range(10**3)]
 
 
 def full_random(characters):
-    matches = []
+    matches = set()
     size = ncr(len(characters), 2)
     print "combinatorial size is:", size
     while size:
@@ -18,7 +18,7 @@ def full_random(characters):
         a, b = list(sorted([a, b]))
         if not ((a, b) in matches) and a != b:
             print a, b
-            matches.append((a, b))
+            matches.update((a, b))
             size -= 1
 
 
