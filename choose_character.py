@@ -1,26 +1,34 @@
-from random import choice
+from random import choice, randint
 import operator as op
 
 
-CHARACTERS = ["elf", "dork", "fork", "superwoman", "rick", "42", "more", "that"]
+CHARACTERS = ["elf", "dork", "fork", "superwoman", "rick"]#, "42", "more", "that"]
 THOUSAND_CHARACTERS = [str(x) for x in range(10**3)]
 
 
+def grid(x, y):
+    full_grid = []
+    for i in xrange(x):
+        for j in xrange(y):
+            if i == j:
+                continue
+            full_grid.append((i, j))
+    return full_grid
+
+
 def full_random(characters):
-    matches = set()
     size = ncr(len(characters), 2)
+    g = grid(len(characters), len(characters))
     print "combinatorial size is:", size
-    while size:
-        a = choice(characters)
-        b = choice(characters)
+    while g:
+        rand = randint(0, len(g)-1)
+        i = g[rand]
+        a, b = characters[i[0]], characters[i[1]]
         if a == b:
             continue
         a, b = list(sorted([a, b]))
-        if not ((a, b) in matches) and a != b:
-            print a, b
-            matches.update((a, b))
-            size -= 1
-
+        print a, b
+        del g[rand]
 
 def ncr(n, r):
     r = min(r, n-r)
